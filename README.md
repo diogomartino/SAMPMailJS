@@ -2,6 +2,8 @@
 
 Esta include serve para enviar emails do Gmail direitamente de um servidor SAMP, usando para isso um servidor em NodeJS. O tutorial de como configurar esta include está presente no tópico do fórum SAMP.
 
+Todas as informações aqui: http://forum.sa-mp.com/showthread.php?p=4026407
+
 
 ###### USO
 ```
