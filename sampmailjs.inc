@@ -3,6 +3,7 @@
 #endif
 
 #include a_http
+#include strlib
 
 #define SAMPMAILJS_RESPONSE_OK 200
 #define SAMPMAILJS_RESPONSE_FORBIDEN 403
@@ -34,10 +35,10 @@ public HandleHTTPResponse(index, response_code, data[]) {
 }
 
 stock SendEmail(name[], to[], subject[], text[]) {
-  new string[128], postData[SAMPMAILJS_MAXPOSTDATA];
+  new string[64], postData[SAMPMAILJS_MAXPOSTDATA];
 
   format(string, sizeof string, "%s/sampmail.js?pw=%s&action=sendmail", SAMPMAILJS_URL, SAMPMAILJS_PASSWORD);
   format(postData, sizeof postData, "%s|%s|%s|%s", name, to, subject, text);
 
-  return HTTP(uniqueID, HTTP_POST, string, postData, "HandleHTTPResponse");
+  return HTTP(uniqueID, HTTP_POST, string, ret_utf8encode(postData), "HandleHTTPResponse");
 }
