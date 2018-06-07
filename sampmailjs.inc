@@ -22,23 +22,29 @@ public HandleHTTPResponse(index, response_code, data[]) {
     uniqueID++;
 
     #if SAMPMAILJS_CONSOLELOG == 1
-      printf("\n[SAMPMAILJS] Foi recebida uma reposta %d do servidor", response_code);
+		printf("\n[SAMPMAILJS] Foi recebida uma reposta %d do servidor", response_code);
     #endif
 
     if (response_code == SAMPMAILJS_RESPONSE_OK) {
-      #if SAMPMAILJS_CONSOLELOG == 1
-        printf("\n[SAMPMAILJS] Email %d enviado com sucesso!", uniqueID);
-      #endif
+		#if SAMPMAILJS_CONSOLELOG == 1
+			printf("\n[SAMPMAILJS] Email %d enviado com sucesso!", uniqueID);
+		#endif
     }
 
-    return response_code;
+	return response_code;
 }
 
-stock SendEmail(name[], to[], subject[], text[]) {
-  new string[64], postData[SAMPMAILJS_MAXPOSTDATA];
+stock SendEmail(name[], to[], subject[], text[], bool:isTemplate = false, templateName[] = "default.html") {
+	new string[64], postData[SAMPMAILJS_MAXPOSTDATA];
 
-  format(string, sizeof string, "%s/sampmail.js?pw=%s&action=sendmail", SAMPMAILJS_URL, SAMPMAILJS_PASSWORD);
-  format(postData, sizeof postData, "%s|%s|%s|%s", name, to, subject, text);
+	if(isTemplate) {
+		format(string, sizeof string, "%s/sampmail.js?pw=%s&action=sendmtmp", SAMPMAILJS_URL, SAMPMAILJS_PASSWORD);
+		format(postData, sizeof postData, "%s|%s|%s|%s|%s", name, to, subject, text, templateName);
+	}
+	else {
+	    format(string, sizeof string, "%s/sampmail.js?pw=%s&action=sendm", SAMPMAILJS_URL, SAMPMAILJS_PASSWORD);
+	    format(postData, sizeof postData, "%s|%s|%s|%s", name, to, subject, text);
+	}
 
-  return HTTP(uniqueID, HTTP_POST, string, ret_utf8encode(postData), "HandleHTTPResponse");
+	return HTTP(uniqueID, HTTP_POST, string, ret_utf8encode(postData), "HandleHTTPResponse");
 }

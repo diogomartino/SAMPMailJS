@@ -1,6 +1,7 @@
 const http = require('http');
 const url = require("url");
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 
 /* CONFIGURE DE ACORDO À SUA UTILIZAÇÃO */
 
@@ -39,7 +40,7 @@ function criarServer() {
       return;
     }
 
-    if (urlObj['query']['action'] == "sendmail") {
+    if (urlObj['query']['action'] == "sendm" || urlObj['query']['action'] == "sendmtmp") {
       if (req.method == 'POST') {
         var body = '';
         req.on('data', function(data) {
@@ -52,54 +53,119 @@ function criarServer() {
           var assunto = postArr[2];
           var texto = postArr[3];
 
-          if (debugDetalhado) {
-            console.log("============ EMAIL A SER ENVIADO ============")
-            console.log("De: " + name);
-            console.log("Para: " + para);
-            console.log("Assunto: " + assunto);
-            console.log("Texto: " + texto);
-            console.log("=============================================")
-          }
+          if (urlObj['query']['action'] == "sendmtmp") {
+            fs.readFile(postArr[4], 'utf8', function(err, data) {
+              if (err) {
+                console.log("Erro a ler o template: " + err);
+              }
 
-          var transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            auth: {
-              type: "OAuth2",
-              user: conta,
-              clientId: google_ClientID,
-              clientSecret: google_ClientSecret,
-              refreshToken: google_RefreshToken
-            }
-          });
+              var textoArr = texto.split('#');
+              var templateText = data.toString();
 
-          var mailOptions = {
-            from: name + ' <' + conta + '>',
-            to: para,
-            subject: assunto,
-            html: texto
-          }
+              for (var i = 0; i < textoArr.length; i++) {
+                var tagArr = textoArr[i].split(':');
+                templateText = templateText.replace(tagArr[0], tagArr[1]);
+              }
 
-          transporter.sendMail(mailOptions, function(err, asd) {
-            if (err) {
-              console.log("[" + req.connection.remoteAddress + "] -> 400: Erro");
-              res.writeHead(400, {
-                'Content-Type': 'text/html;charset=UTF-8'
+              if (debugDetalhado) {
+                console.log("============ EMAIL A SER ENVIADO ============")
+                console.log("De: " + name);
+                console.log("Para: " + para);
+                console.log("Assunto: " + assunto);
+                console.log("Texto: " + templateText);
+                console.log("=============================================")
+              }
+
+              var transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                auth: {
+                  type: "OAuth2",
+                  user: conta,
+                  clientId: google_ClientID,
+                  clientSecret: google_ClientSecret,
+                  refreshToken: google_RefreshToken
+                }
               });
 
-              res.write("400: Ocorreu um erro:</br>" + err);
-              res.end();
-              return;
-            } else {
-              console.log("[" + req.connection.remoteAddress + "] -> 200: Email enviado");
-              res.writeHead(200, {
-                'Content-Type': 'text/html;charset=UTF-8'
-              });
+              var mailOptions = {
+                from: name + ' <' + conta + '>',
+                to: para,
+                subject: assunto,
+                html: templateText
+              }
 
-              res.write("Email enviado com sucesso");
-              res.end();
-              return;
+              transporter.sendMail(mailOptions, function(err, asd) {
+                if (err) {
+                  console.log("[" + req.connection.remoteAddress + "] -> 400: Erro");
+                  res.writeHead(400, {
+                    'Content-Type': 'text/html;charset=UTF-8'
+                  });
+
+                  res.write("400: Ocorreu um erro:</br>" + err);
+                  res.end();
+                  return;
+                } else {
+                  console.log("[" + req.connection.remoteAddress + "] -> 200: Email enviado");
+                  res.writeHead(200, {
+                    'Content-Type': 'text/html;charset=UTF-8'
+                  });
+
+                  res.write("Email enviado com sucesso");
+                  res.end();
+                  return;
+                }
+              })
+            });
+          } else {
+            if (debugDetalhado) {
+              console.log("============ EMAIL A SER ENVIADO ============")
+              console.log("De: " + name);
+              console.log("Para: " + para);
+              console.log("Assunto: " + assunto);
+              console.log("Texto: " + texto);
+              console.log("=============================================")
             }
-          })
+
+            var transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              auth: {
+                type: "OAuth2",
+                user: conta,
+                clientId: google_ClientID,
+                clientSecret: google_ClientSecret,
+                refreshToken: google_RefreshToken
+              }
+            });
+
+            var mailOptions = {
+              from: name + ' <' + conta + '>',
+              to: para,
+              subject: assunto,
+              html: texto
+            }
+
+            transporter.sendMail(mailOptions, function(err, asd) {
+              if (err) {
+                console.log("[" + req.connection.remoteAddress + "] -> 400: Erro");
+                res.writeHead(400, {
+                  'Content-Type': 'text/html;charset=UTF-8'
+                });
+
+                res.write("400: Ocorreu um erro:</br>" + err);
+                res.end();
+                return;
+              } else {
+                console.log("[" + req.connection.remoteAddress + "] -> 200: Email enviado");
+                res.writeHead(200, {
+                  'Content-Type': 'text/html;charset=UTF-8'
+                });
+
+                res.write("Email enviado com sucesso");
+                res.end();
+                return;
+              }
+            })
+          }
         });
       }
     } else {
