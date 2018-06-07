@@ -4,6 +4,13 @@ Esta include serve para enviar emails do Gmail direitamente de um servidor SAMP,
 
 Todas as informações aqui: http://forum.sa-mp.com/showthread.php?p=4026407
 
+### DEPENDÊNCIAS
+
+É necessário instalar as dependências também para que a include funcione corretamente.
+
+**Strlib**
+https://github.com/oscar-broman/strlib
+
 
 ###### USO
 ```
