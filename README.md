@@ -28,7 +28,7 @@ https://github.com/oscar-broman/strlib
 *npm install fs --save*
 
 
-#### FUNCTIONS
+### FUNCTIONS
 
 ```
 SendEmail(name[], to[], subject[], text[], bool:isTemplate = false, templateName[] = "default.html")
