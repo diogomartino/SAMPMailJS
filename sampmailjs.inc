@@ -10,10 +10,10 @@
 #define SAMPMAILJS_RESPONSE_ERROR 400
 #define SAMPMAILJS_RESPONSE_NOTFOUND 404
 
-#define SAMPMAILJS_URL "127.0.0.1:8080" // IP + Porta do servidor NodeJS
-#define SAMPMAILJS_PASSWORD "changeme" // Password para ter mais segurança
-#define SAMPMAILJS_CONSOLELOG 0 // Quando é 1, dá log na consola do servidor quando é enviado um email
-#define SAMPMAILJS_MAXPOSTDATA 2048 // Dependendo do tamanho dos emails que quer mandar, aumente o diminua este número
+#define SAMPMAILJS_URL "127.0.0.1:8080" // IP + PORT of the server running the NodeJS script
+#define SAMPMAILJS_PASSWORD "changeme" // This password should be the same as the NodeJS script
+#define SAMPMAILJS_CONSOLELOG 0 // Log some information on console
+#define SAMPMAILJS_MAXPOSTDATA 2048 // Cellsize of the variable that holds the data sent to the script. Lower for small emails, higher for more extense emails
 
 new uniqueID = 0;
 
@@ -22,12 +22,12 @@ public HandleHTTPResponse(index, response_code, data[]) {
     uniqueID++;
 
     #if SAMPMAILJS_CONSOLELOG == 1
-		printf("\n[SAMPMAILJS] Foi recebida uma reposta %d do servidor", response_code);
+		printf("\n[SAMPMAILJS] Server returned a response %d", response_code);
     #endif
 
     if (response_code == SAMPMAILJS_RESPONSE_OK) {
 		#if SAMPMAILJS_CONSOLELOG == 1
-			printf("\n[SAMPMAILJS] Email %d enviado com sucesso!", uniqueID);
+			printf("\n[SAMPMAILJS] Email %d sent successfully", uniqueID);
 		#endif
     }
 
