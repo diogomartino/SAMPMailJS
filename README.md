@@ -1,28 +1,41 @@
 # SAMPMailJS
 
-Esta include serve para enviar emails do Gmail direitamente de um servidor SAMP, usando para isso um servidor em NodeJS. O tutorial de como configurar esta include está presente no tópico do fórum SAMP.
+Use this include to send emails directly trough a gmail account. This will prevent that your mails end on the spam folder.
 
-Todas as informações aqui: http://forum.sa-mp.com/showthread.php?p=4026407
 
-### DEPENDÊNCIAS
+### WIKI
 
-É necessário instalar as dependências também para que a include funcione corretamente.
+Please check the [Wiki](https://github.com/bruxo00/SAMPMailJS/wiki) for more information and documentation.
+
+
+### DEPENDENCIES
+
+You must install the dependencies below 
 
 **Strlib**
 https://github.com/oscar-broman/strlib
 
+**nodemailer**
+*npm install nodemailer --save*
 
-###### USO
-```
-SendEmail(name[], to[], subject[], text[])
+**http**
+*npm install http --save*
 
-name - Nome do email que envia
-to - Destinatário
-subject - Assunto
-texto - Body do email
+**url**
+*npm install url --save*
+
+**fs**
+*npm install fs --save*
+
+
+#### FUNCTIONS
+
+```
+SendEmail(name[], to[], subject[], text[], bool:isTemplate = false, templateName[] = "default.html")
 ```
 
-###### EXEMPLO
-```
-SendEmail("SAMPMailJS Server", "random@gmail.com", "Registo no servidor", "Bem Vindo ao servidor! Obrigado por se registar!");
-```
+###### name: The name that will appear next to your email
+###### to: The email address you want to send the email to
+###### subject: The subject of your email
+###### isTemplate: When set to false, it will only send the text you input in the argument text. When set to true, it will try to use a template.
+###### templateName: The file name of the template that must be in the same folder of your NodeJS script.
