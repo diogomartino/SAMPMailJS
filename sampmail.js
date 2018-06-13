@@ -8,13 +8,29 @@ const fs = require('fs');
 var localIP = "127.0.0.1";
 var port = 8080;
 var httpPassword = "changeme";
-var google_Account = "omeuemail@gmail.com";
+var google_Account = "myemail@gmail.com";
 var google_ClientID = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.apps.googleusercontent.com";
 var google_ClientSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 var google_RefreshToken = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 var detailedDebug = 1;
 
 // ===================================================================
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+var transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  auth: {
+    type: "OAuth2",
+    user: google_Account,
+    clientId: google_ClientID,
+    clientSecret: google_ClientSecret,
+    refreshToken: google_RefreshToken
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
 
 createServer();
 
@@ -56,7 +72,7 @@ function createServer() {
           if (urlObj['query']['action'] == "sendmtmp") {
             fs.readFile(postArr[4], 'utf8', function(err, data) {
               if (err) {
-                console.log("[" + req.connection.remoteAddress + "] -> 400: Error");
+                console.log("[" + req.connection.remoteAddress + "] -> 400: Error \n" + err);
                 res.writeHead(400, {
                   'Content-Type': 'text/html;charset=UTF-8'
                 });
@@ -83,17 +99,6 @@ function createServer() {
                 console.log("===============================================");
               }
 
-              var transporter = nodemailer.createTransport({
-                host: "smtp.gmail.com",
-                auth: {
-                  type: "OAuth2",
-                  user: google_Account,
-                  clientId: google_ClientID,
-                  clientSecret: google_ClientSecret,
-                  refreshToken: google_RefreshToken
-                }
-              });
-
               var mailOptions = {
                 from: e_Name + ' <' + google_Account + '>',
                 to: e_To,
@@ -103,7 +108,7 @@ function createServer() {
 
               transporter.sendMail(mailOptions, function(err, asd) {
                 if (err) {
-                  console.log("[" + req.connection.remoteAddress + "] -> 400: Error");
+                  console.log("[" + req.connection.remoteAddress + "] -> 400: Error \n" + err);
                   res.writeHead(400, {
                     'Content-Type': 'text/html;charset=UTF-8'
                   });
@@ -133,17 +138,6 @@ function createServer() {
               console.log("===============================================")
             }
 
-            var transporter = nodemailer.createTransport({
-              host: "smtp.gmail.com",
-              auth: {
-                type: "OAuth2",
-                user: google_Account,
-                clientId: google_ClientID,
-                clientSecret: google_ClientSecret,
-                refreshToken: google_RefreshToken
-              }
-            });
-
             var mailOptions = {
               from: e_Name + ' <' + google_Account + '>',
               to: e_To,
@@ -153,7 +147,7 @@ function createServer() {
 
             transporter.sendMail(mailOptions, function(err, asd) {
               if (err) {
-                console.log("[" + req.connection.remoteAddress + "] -> 400: Error");
+                console.log("[" + req.connection.remoteAddress + "] -> 400: Error \n" + err);
                 res.writeHead(400, {
                   'Content-Type': 'text/html;charset=UTF-8'
                 });
