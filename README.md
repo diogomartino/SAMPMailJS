@@ -2,30 +2,31 @@
 
 Use this include to send emails directly trough a gmail account. This will prevent that your mails end on the spam folder.
 
-
 ### WIKI
 
-Please check the [Wiki](https://github.com/bruxo00/SAMPMailJS/wiki) for more information and documentation.
-
+Please check the Wiki for more information and documentation. [Learn more](https://github.com/bruxo00/SAMPMailJS/wiki)
 
 ### DEPENDENCIES
 
 You must install the dependencies below 
 
-**Strlib**
-https://github.com/oscar-broman/strlib
+**strlib**
+[Github Repository](https://github.com/oscar-broman/strlib)
+
+**nodejs**
+[Official Download Site](https://nodejs.org/en/)
 
 **nodemailer**
-*npm install nodemailer --save*
+`npm install nodemailer --save`
 
 **http**
-*npm install http --save*
+`npm install http --save`
 
 **url**
-*npm install url --save*
+`npm install url --save`
 
 **fs**
-*npm install fs --save*
+`npm install fs --save`
 
 
 ### FUNCTIONS
@@ -33,9 +34,9 @@ https://github.com/oscar-broman/strlib
 ```
 SendEmail(name[], to[], subject[], text[], bool:isTemplate = false, templateName[] = "default.html")
 ```
-
-###### name: The name that will appear next to your email
-###### to: The email address you want to send the email to
-###### subject: The subject of your email
-###### isTemplate: When set to false, it will only send the text you input in the argument text. When set to true, it will try to use a template. [Learn more](https://github.com/bruxo00/SAMPMailJS/wiki/How-to-use-it-%5Bwith-templates%5D)
-###### templateName: The file name of the template that must be in the same folder of your NodeJS script.
+Parameters Guide:
+    name: The name that will appear next to your email (string)
+    to: The email address you want to send the email to (string)
+    subject: The subject of your email (string)
+    isTemplate: When set to false, it will only send the text you input in the argument text. When set to true, it will try to use a template. (boolean)
+    templateName: The file name of the template that must be in the same folder of your NodeJS script. (string)
