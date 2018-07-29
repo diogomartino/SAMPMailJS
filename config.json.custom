@@ -1,0 +1,18 @@
+{
+  "machineIp": "127.0.0.1",
+  "listenPort": 8080,
+  "httpPassword": "changeme",
+  "enableDebug": true,
+  "smtp": {
+    "host": "mydomain.com",
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "myemail@mydomain.com",
+      "pass": "changeme"
+    },
+    "tls": {
+      "rejectUnauthorized": false
+    }
+  }
+}

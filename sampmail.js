@@ -3,36 +3,42 @@ const url = require("url");
 const nodemailer = require('nodemailer');
 const fs = require('fs');
 
-/* SETUP WITH YOUR OWN SETTINGS */
+var templateFolder = __dirname + "/templates/";
+var config;
 
-var localIP = "127.0.0.1";
-var port = 8080;
-var httpPassword = "changeme";
-var google_Account = "myemail@gmail.com";
-var google_ClientID = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.apps.googleusercontent.com";
-var google_ClientSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-var google_RefreshToken = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-var detailedDebug = 1;
+try {
+  config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
+  console.log("Loaded configs from config.json");
 
-// ===================================================================
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-var transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  auth: {
-    type: "OAuth2",
-    user: google_Account,
-    clientId: google_ClientID,
-    clientSecret: google_ClientSecret,
-    refreshToken: google_RefreshToken
-  },
-  tls: {
-    rejectUnauthorized: false
+  if(config.enableDebug) {
+    console.log("\n\n");
+    console.log(config);
+    console.log("\n\n");
   }
-});
+} catch (e) {
+  console.log("Couldn't read from config.json");
+  process.exit();
+}
+
+if (!fs.existsSync(templateFolder)) {
+  console.log("Warning: templates folder doesn't exist, the script will crash if you try to use a template. Please create the directory " + templateFolder + "\n");
+}
+
+var transporter = nodemailer.createTransport(config.smtp);
 
 createServer();
+
+function logResponse(address, code, text, res) {
+  res.writeHead(code, {
+    'Content-Type': 'text/html;charset=UTF-8'
+  });
+
+  res.write("Powered by SAMPMailJS</br>" + code + ": " + text);
+  res.end();
+
+  var consoleText = text.replace("</br>", "\n");
+  console.log("Sent HTTP code " + code + " to " + address + ": " + consoleText);
+}
 
 function createServer() {
   var server = http.createServer(function(req, res) {
@@ -45,14 +51,8 @@ function createServer() {
 
     console.log("Client (" + req.connection.remoteAddress + ") requested " + req.url);
 
-    if (urlObj['query']['pw'] != httpPassword && urlObj['query']['pw'] != "undefined" && urlObj['query']['pw'] != "" && urlObj['query']['pw'] != null) {
-      console.log("[" + req.connection.remoteAddress + "] -> 403: Wrong password");
-      res.writeHead(403, {
-        'Content-Type': 'text/html;charset=UTF-8'
-      });
-
-      res.write("403: Access denied");
-      res.end();
+    if (urlObj['query']['pw'] != config.httpPassword && urlObj['query']['pw'] != "undefined" && urlObj['query']['pw'] != "" && urlObj['query']['pw'] != null) {
+      logResponse(req.connection.remoteAddress, 403, "Wrong password", res);
       return;
     }
 
@@ -70,15 +70,11 @@ function createServer() {
           var e_Text = postArr[3];
 
           if (urlObj['query']['action'] == "sendmtmp") {
-            fs.readFile(postArr[4], 'utf8', function(err, data) {
-              if (err) {
-                console.log("[" + req.connection.remoteAddress + "] -> 400: Error \n" + err);
-                res.writeHead(400, {
-                  'Content-Type': 'text/html;charset=UTF-8'
-                });
+            var templateName = postArr[4];
 
-                res.write("400: An error ocurred:</br>" + err);
-                res.end();
+            fs.readFile(templateFolder + templateName, 'utf8', function(err, data) {
+              if (err) {
+                logResponse(req.connection.remoteAddress, 400, "An error ocurred:</br>" + err, res);
                 return;
               }
 
@@ -90,7 +86,7 @@ function createServer() {
                 templateText = templateText.replace(tagArr[0], tagArr[1]);
               }
 
-              if (detailedDebug) {
+              if (config.enableDebug) {
                 console.log("================ SENDING EMAIL ================");
                 console.log("From: " + e_Name);
                 console.log("To: " + e_To);
@@ -100,7 +96,7 @@ function createServer() {
               }
 
               var mailOptions = {
-                from: e_Name + ' <' + google_Account + '>',
+                from: e_Name + ' <' + config.smtp.auth.user + '>',
                 to: e_To,
                 subject: e_Subject,
                 html: templateText
@@ -108,28 +104,16 @@ function createServer() {
 
               transporter.sendMail(mailOptions, function(err, asd) {
                 if (err) {
-                  console.log("[" + req.connection.remoteAddress + "] -> 400: Error \n" + err);
-                  res.writeHead(400, {
-                    'Content-Type': 'text/html;charset=UTF-8'
-                  });
-
-                  res.write("400: An error ocurred:</br>" + err);
-                  res.end();
+                  logResponse(req.connection.remoteAddress, 400, "An error ocurred:</br>" + err, res);
                   return;
                 } else {
-                  console.log("[" + req.connection.remoteAddress + "] -> 200: Email sent");
-                  res.writeHead(200, {
-                    'Content-Type': 'text/html;charset=UTF-8'
-                  });
-
-                  res.write("Email sent successfully");
-                  res.end();
+                  logResponse(req.connection.remoteAddress, 200, "Email sent successfully", res);
                   return;
                 }
               })
             });
           } else {
-            if (detailedDebug) {
+            if (config.enableDebug) {
               console.log("================ SENDING EMAIL ================")
               console.log("De: " + e_Name);
               console.log("To: " + e_To);
@@ -139,7 +123,7 @@ function createServer() {
             }
 
             var mailOptions = {
-              from: e_Name + ' <' + google_Account + '>',
+              from: e_Name + ' <' + config.smtp.auth.user + '>',
               to: e_To,
               subject: e_Subject,
               html: e_Text
@@ -147,22 +131,10 @@ function createServer() {
 
             transporter.sendMail(mailOptions, function(err, asd) {
               if (err) {
-                console.log("[" + req.connection.remoteAddress + "] -> 400: Error \n" + err);
-                res.writeHead(400, {
-                  'Content-Type': 'text/html;charset=UTF-8'
-                });
-
-                res.write("400: An error ocurred:</br>" + err);
-                res.end();
+                logResponse(req.connection.remoteAddress, 400, "An error ocurred:</br>" + err, res);
                 return;
               } else {
-                console.log("[" + req.connection.remoteAddress + "] -> 200: Email sent");
-                res.writeHead(200, {
-                  'Content-Type': 'text/html;charset=UTF-8'
-                });
-
-                res.write("Email sent successfully");
-                res.end();
+                logResponse(req.connection.remoteAddress, 200, "Email sent successfully", res);
                 return;
               }
             })
@@ -170,18 +142,12 @@ function createServer() {
         });
       }
     } else {
-      console.log("[" + req.connection.remoteAddress + "] -> 404: Action inexistente");
-      res.writeHead(404, {
-        'Content-Type': 'text/html;charset=UTF-8'
-      });
-
-      res.write("404: Incorrect request");
-      res.end();
+      logResponse(req.connection.remoteAddress, 404, "Incorrect request", res);
       return;
     }
 
   });
-  server.listen(port, localIP);
+  server.listen(config.listenPort, config.machineIp);
 
-  console.log('Server running on http://' + localIP + ':' + port + '/');
+  console.log('Server running on http://' + config.machineIp + ':' + config.listenPort + '/');
 }

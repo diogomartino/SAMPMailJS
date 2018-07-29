@@ -1,0 +1,19 @@
+{
+  "machineIp": "127.0.0.1",
+  "listenPort": 8080,
+  "httpPassword": "changeme",
+  "enableDebug": true,
+  "smtp": {
+    "host": "smtp.gmail.com",
+    "auth": {
+      "type": "OAuth2",
+      "user": "myemail@gmail.com",
+      "clientId": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.apps.googleusercontent.com",
+      "clientSecret": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "refreshToken": "X/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    },
+    "tls": {
+      "rejectUnauthorized": false
+    }
+  }
+}
