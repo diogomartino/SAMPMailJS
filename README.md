@@ -35,8 +35,9 @@ You must install the dependencies below
 SendEmail(name[], to[], subject[], text[], bool:isTemplate = false, templateName[] = "default.html")
 ```
 Parameters Guide:
-    name: The name that will appear next to your email (string)
-    to: The email address you want to send the email to (string)
-    subject: The subject of your email (string)
-    isTemplate: When set to false, it will only send the text you input in the argument text. When set to true, it will try to use a template. (boolean)
-    templateName: The file name of the template that must be in the same folder of your NodeJS script. (string)
+
+     name: The name that will appear next to your email (string)
+     to: The email address you want to send the email to (string)
+     subject: The subject of your email (string)
+     isTemplate: When set to false, it will only send the text you input in the argument text. When set to true, it will try to use a template. (boolean)
+     templateName: The file name of the template that must be in the same folder of your NodeJS script. (string)
