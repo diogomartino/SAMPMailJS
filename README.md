@@ -1,6 +1,6 @@
 # SAMPMailJS
 
-Use this include to send emails directly trough a gmail account (or another SMTP server if you want). This will prevent that your mails end on the spam folder.
+Use this include to send emails directly trough a gmail account. This will prevent that your mails end on the spam folder. We now support custom SMTP servers.
 
 ### WIKI
 
