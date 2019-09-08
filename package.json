@@ -1,0 +1,24 @@
+{
+  "name": "nodemailjs",
+  "version": "1.0.0",
+  "description": "Service to send emails with SAMP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bruxo00/SAMPMailJS.git"
+  },
+  "author": "Diogo Martino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bruxo00/SAMPMailJS/issues"
+  },
+  "homepage": "https://github.com/bruxo00/SAMPMailJS#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "url": "^0.11.0"
+  }
+}
