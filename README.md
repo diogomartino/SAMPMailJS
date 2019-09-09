@@ -5,6 +5,7 @@ Use this include to send emails directly trough a gmail account. This will preve
 ### WIKI
 
 Please check the Wiki for more information and documentation. [Learn more](https://github.com/bruxo00/SAMPMailJS/wiki)
+You can also see a video on how to set this up properly [HERE](https://www.youtube.com/watch?v=n5V3E5x8FxY).
 
 ### DEPENDENCIES
 
