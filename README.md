@@ -16,18 +16,6 @@ You must install the dependencies below
 **nodejs**
 [Official Download Site](https://nodejs.org/en/)
 
-**nodemailer**
-`npm install nodemailer --save`
-
-**http**
-`npm install http --save`
-
-**url**
-`npm install url --save`
-
-**fs**
-`npm install fs --save`
-
 
 ### FUNCTIONS
 
