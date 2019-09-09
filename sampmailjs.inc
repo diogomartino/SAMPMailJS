@@ -22,7 +22,7 @@ public HandleHTTPResponse(index, response_code, data[]) {
     uniqueID++;
 
     #if SAMPMAILJS_CONSOLELOG == 1
-		  printf("\n[SAMPMAILJS] Server returned a response %d", response_code);
+		printf("\n[SAMPMAILJS] Server returned a response %d", response_code);
     #endif
 
     if (response_code == SAMPMAILJS_RESPONSE_OK) {
@@ -42,10 +42,10 @@ stock SendEmail(name[], to[], subject[], text[], bool:isTemplate = false, templa
 		format(postData, sizeof postData, "%s|%s|%s|%s|%s", name, to, subject, text, templateName);
 	}
 	else {
-	  format(string, sizeof string, "%s/sampmail.js?pw=%s&action=sendm", SAMPMAILJS_URL, SAMPMAILJS_PASSWORD);
-	  format(postData, sizeof postData, "%s|%s|%s|%s", name, to, subject, text);
+ 		format(string, sizeof string, "%s/sampmail.js?pw=%s&action=sendm", SAMPMAILJS_URL, SAMPMAILJS_PASSWORD);
+	  	format(postData, sizeof postData, "%s|%s|%s|%s", name, to, subject, text);
 	}
 
-  utf8encode(postData, postData);
+  	utf8encode(postData, postData);
 	return HTTP(uniqueID, HTTP_POST, string, postData, "HandleHTTPResponse");
 }
