@@ -1,0 +1,9 @@
+{
+	"user": "Fairuz-Afdhal",
+	"repo": "SAMPMailJS",
+	"entry": "test.pwn",
+	"output": "test.amx",
+	"dependencies": [
+		"oscar-broman/strlib"
+	]
+}
