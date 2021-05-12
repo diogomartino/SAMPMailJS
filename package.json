@@ -19,7 +19,7 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "http": "0.0.0",
-    "nodemailer": "^6.3.0",
+    "nodemailer": "^6.4.16",
     "url": "^0.11.0"
   }
 }
