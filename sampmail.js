@@ -51,7 +51,7 @@ function createServer() {
 
     console.log('Client (' + req.connection.remoteAddress + ') requested ' + req.url);
 
-    if (urlObj['query']['pw'] != config.httpPassword && urlObj['query']['pw'] != 'undefined' && urlObj['query']['pw'] != '' && urlObj['query']['pw'] != null) {
+    if (urlObj['query']['pw'] != config.httpPassword || typeof urlObj['query']['pw'] === 'undefined' || urlObj['query']['pw'] == null || urlObj['query']['pw'].replace(/\s/g, '').length < 1) {
       logResponse(req.connection.remoteAddress, 403, 'Wrong password', res);
       return;
     }
